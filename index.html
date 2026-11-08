@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ダッシュボード｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>ダッシュボード</h1>
+          <p>在庫状況の概要（直近7日間の使用実績にもとづく）</p>
+        </div>
+      </div>
+      <div id="dashboard-error"></div>
+
+      <div class="kpi-grid">
+        <a class="card kpi" href="products.html">
+          <span class="kpi-label">登録資材数</span>
+          <span class="kpi-value" id="kpi-total">-</span>
+        </a>
+        <a class="card kpi is-urgent" href="inventory.html?status=urgent">
+          <span class="kpi-label">在庫不足（緊急）</span>
+          <span class="kpi-value" id="kpi-urgent">-</span>
+        </a>
+        <a class="card kpi is-warning" href="inventory.html?status=warning">
+          <span class="kpi-label">発注推奨（注意）</span>
+          <span class="kpi-value" id="kpi-warning">-</span>
+        </a>
+        <a class="card kpi" href="alerts.html">
+          <span class="kpi-label">発注済み（入荷待ち）</span>
+          <span class="kpi-value" id="kpi-ordered">-</span>
+        </a>
+      </div>
+
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">発注が必要な商品</h2>
+            <a href="alerts.html">発注アラートを開く →</a>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>状態</th><th>型番</th><th>製品名</th><th class="num">現在庫</th><th class="num">残存日数</th><th class="num">LT</th><th>発注状況</th></tr>
+              </thead>
+              <tbody id="alert-rows"><tr><td colspan="7" class="empty">読み込み中…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">最近の検収記録</h2>
+            <a href="receipt.html">検収登録 →</a>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>検収日</th><th>型番</th><th>製品名</th><th class="num">数量</th><th>登録者</th></tr>
+              </thead>
+              <tbody id="receipt-rows"><tr><td colspan="5" class="empty">読み込み中…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="js/pages/dashboard.js"></script>
+</body>
+</html>

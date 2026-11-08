@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>医療資材マスタ｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>医療資材マスタ</h1>
+          <p>資材の基本情報・発注点・リードタイムを管理します。</p>
+        </div>
+        <button type="button" class="btn btn-primary" id="new-btn" data-admin-only>＋ 新規登録</button>
+      </div>
+
+      <div id="page-error"></div>
+
+      <div class="card">
+        <div class="toolbar">
+          <div class="field grow">
+            <label for="f-keyword">キーワード</label>
+            <input class="input" id="f-keyword" type="search" placeholder="型番・製品名・メーカー名で検索">
+          </div>
+          <div class="field">
+            <label for="f-category">カテゴリー</label>
+            <select class="select" id="f-category"><option value="">すべて</option></select>
+          </div>
+          <div class="field">
+            <label for="f-active">使用状態</label>
+            <select class="select" id="f-active">
+              <option value="active">使用中のみ</option>
+              <option value="inactive">使用停止のみ</option>
+              <option value="">すべて</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result-count" id="result-count"></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>型番</th>
+                <th>メーカー名</th>
+                <th>製品名</th>
+                <th>規格</th>
+                <th>カテゴリー</th>
+                <th class="num">現在庫</th>
+                <th>単位</th>
+                <th class="num">発注点</th>
+                <th class="num">リードタイム</th>
+                <th class="num">安全在庫日数</th>
+                <th>状態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="product-rows">
+              <tr><td colspan="12" class="empty">読み込み中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 新規登録・編集ダイアログ -->
+  <dialog class="modal" id="product-dialog" aria-labelledby="product-dialog-title">
+    <form id="product-form" novalidate>
+      <div class="modal-head" id="product-dialog-title">資材の新規登録</div>
+      <div class="modal-body">
+        <div id="product-form-error"></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="p-model_no" class="required">型番</label>
+            <input class="input" id="p-model_no" autocomplete="off" maxlength="50">
+            <span class="hint">全角で入力しても半角に自動変換されます</span>
+          </div>
+          <div class="field">
+            <label for="p-maker">メーカー名</label>
+            <input class="input" id="p-maker" maxlength="100">
+          </div>
+          <div class="field">
+            <label for="p-name" class="required">製品名</label>
+            <input class="input" id="p-name" maxlength="100">
+          </div>
+          <div class="field">
+            <label for="p-spec">規格</label>
+            <input class="input" id="p-spec" maxlength="100" placeholder="例：Mサイズ・100枚入り">
+          </div>
+          <div class="field">
+            <label for="p-category_id" class="required">カテゴリー</label>
+            <select class="select" id="p-category_id"><option value="">選択してください</option></select>
+          </div>
+          <div class="field">
+            <label for="p-unit" class="required">単位</label>
+            <input class="input" id="p-unit" list="unit-list" maxlength="10" placeholder="例：箱">
+            <datalist id="unit-list">
+              <option value="個"><option value="箱"><option value="本"><option value="枚">
+              <option value="袋"><option value="ケース"><option value="セット">
+            </datalist>
+          </div>
+          <div class="field">
+            <label for="p-reorder_point" class="required">発注点</label>
+            <input class="input" id="p-reorder_point" inputmode="numeric" value="0">
+            <span class="hint">この数量以下になると「発注推奨」</span>
+          </div>
+          <div class="field">
+            <label for="p-lead_time_days" class="required">発注リードタイム（日）</label>
+            <input class="input" id="p-lead_time_days" inputmode="numeric" value="7">
+            <span class="hint">発注から到着までの日数</span>
+          </div>
+          <div class="field">
+            <label for="p-safety_days" class="required">安全在庫日数（日）</label>
+            <input class="input" id="p-safety_days" inputmode="numeric" value="3">
+            <span class="hint">リードタイムに上乗せする余裕</span>
+          </div>
+          <div class="field">
+            <label for="p-manual_daily_usage">手動設定の平均使用量（1日あたり）</label>
+            <input class="input" id="p-manual_daily_usage" inputmode="decimal" placeholder="未設定">
+            <span class="hint">使用実績がない場合のみ使用されます</span>
+          </div>
+          <div class="field" id="initial-qty-field">
+            <label for="p-initial_qty">初期在庫数</label>
+            <input class="input" id="p-initial_qty" inputmode="numeric" value="0">
+            <span class="hint">「調整」として入出庫履歴に記録されます</span>
+          </div>
+          <div class="field" id="active-field" hidden>
+            <label>使用状態</label>
+            <label class="check"><input type="checkbox" id="p-is_active"> 使用中（チェックを外すと一覧・登録画面に表示されません）</label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:16px">
+          <label for="p-notes">備考</label>
+          <textarea class="textarea" id="p-notes" maxlength="500"></textarea>
+        </div>
+        <p class="text-sub" id="edit-stock-note" hidden>※ 在庫数はこの画面では変更できません。検収登録・使用登録・在庫調整で変更してください。</p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" data-close>キャンセル</button>
+        <button type="submit" class="btn btn-primary" id="product-save-btn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 在庫調整（棚卸）ダイアログ -->
+  <dialog class="modal" id="adjust-dialog" aria-labelledby="adjust-dialog-title">
+    <form id="adjust-form" novalidate>
+      <div class="modal-head" id="adjust-dialog-title">在庫調整（棚卸）</div>
+      <div class="modal-body">
+        <div id="adjust-form-error"></div>
+        <dl class="info-grid" id="adjust-info" style="margin-bottom:16px"></dl>
+        <div class="form-grid">
+          <div class="field">
+            <label for="a-actual" class="required">実在庫数（数えた数量）</label>
+            <div class="input-group">
+              <input class="input" id="a-actual" inputmode="numeric" autocomplete="off">
+              <span class="input-suffix" id="a-unit"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="a-reason" class="required">調整理由</label>
+            <input class="input" id="a-reason" maxlength="200" placeholder="例：月末棚卸、破損による廃棄">
+          </div>
+        </div>
+        <div class="stock-preview" id="adjust-preview"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" data-close>キャンセル</button>
+        <button type="submit" class="btn btn-primary" id="adjust-save-btn">調整を登録</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/pages/products.js"></script>
+</body>
+</html>

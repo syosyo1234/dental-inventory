@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>入出庫履歴｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>入出庫履歴</h1>
+          <p>すべての在庫変動の記録です。記録は削除・変更できません。誤登録は「取消」で逆方向の記録を追加して修正します。</p>
+        </div>
+      </div>
+
+      <div id="page-error"></div>
+
+      <div class="card">
+        <form class="toolbar" id="filter-form">
+          <div class="field grow">
+            <label for="f-product">資材</label>
+            <select class="select" id="f-product"><option value="">すべての資材</option></select>
+          </div>
+          <div class="field">
+            <label for="f-type">区分</label>
+            <select class="select" id="f-type">
+              <option value="">すべて</option>
+              <option value="IN">入庫（検収）</option>
+              <option value="OUT">出庫（使用）</option>
+              <option value="ADJUST">調整（棚卸・初期在庫）</option>
+              <option value="CANCEL">取消</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-from">業務日（から）</label>
+            <input class="input" id="f-from" type="date">
+          </div>
+          <div class="field">
+            <label for="f-to">業務日（まで）</label>
+            <input class="input" id="f-to" type="date">
+          </div>
+          <div class="toolbar-actions">
+            <button type="button" class="btn" id="reset-btn">条件クリア</button>
+            <button type="submit" class="btn btn-primary">検索</button>
+          </div>
+        </form>
+
+        <div class="result-count" id="result-count"></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>登録日時</th>
+                <th>業務日</th>
+                <th>型番</th>
+                <th>製品名</th>
+                <th>区分</th>
+                <th class="num">数量</th>
+                <th class="num">変更前在庫</th>
+                <th class="num">変更後在庫</th>
+                <th>登録者</th>
+                <th>備考</th>
+                <th>状態</th>
+                <th data-admin-only>操作</th>
+              </tr>
+            </thead>
+            <tbody id="rows"><tr><td colspan="13" class="empty">読み込み中…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pager" id="pager"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 取消ダイアログ -->
+  <dialog class="modal" id="cancel-dialog" aria-labelledby="cancel-dialog-title">
+    <form id="cancel-form" novalidate>
+      <div class="modal-head" id="cancel-dialog-title">記録の取消</div>
+      <div class="modal-body">
+        <div id="cancel-error"></div>
+        <dl class="info-grid" id="cancel-info" style="margin-bottom:16px"></dl>
+        <div class="alert alert-info" id="cancel-effect"></div>
+        <div class="field">
+          <label for="cancel-reason" class="required">取消理由</label>
+          <input class="input" id="cancel-reason" maxlength="200" placeholder="例：数量の入力ミス（正しくは3箱）">
+          <span class="hint">元の記録は残り、逆方向の「取消」記録が追加されます。正しい内容は改めて登録してください。</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" data-close>キャンセル</button>
+        <button type="submit" class="btn btn-danger" id="cancel-submit">取消を登録</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/pages/history.js"></script>
+</body>
+</html>

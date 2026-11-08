@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>検収登録｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>検収登録</h1>
+          <p>型番を入力すると、医療資材マスタから資材情報を自動で表示します。数量と検収日を入力して登録すると、在庫が自動で増えます。</p>
+        </div>
+      </div>
+
+      <ol class="flow-steps" id="flow-steps">
+        <li data-step="1">型番を入力</li>
+        <li data-step="2">資材情報を確認（自動表示）</li>
+        <li data-step="3">数量・検収日を入力</li>
+        <li data-step="4">登録・在庫を自動更新</li>
+      </ol>
+
+      <div class="grid-2">
+        <!-- 入力フォーム -->
+        <form class="card" id="receipt-form" novalidate autocomplete="off">
+          <h2 class="card-title">検収内容の入力</h2>
+
+          <div class="field">
+            <label for="model-no" class="required">型番</label>
+            <div class="input-with-button">
+              <input class="input input-lg" id="model-no" list="model-list" placeholder="例：DC-001" maxlength="50" autofocus>
+              <button type="button" class="btn" id="lookup-btn">検索</button>
+            </div>
+            <datalist id="model-list"></datalist>
+            <span class="hint">入力すると自動で検索します（全角・小文字でも可）。バーコードリーダーでも入力できます。</span>
+          </div>
+
+          <!-- マスタから自動表示される資材情報 -->
+          <div class="info-panel" id="product-info" aria-live="polite">
+            <span class="placeholder-text">型番を入力すると、メーカー名・製品名・規格・カテゴリーがここに表示されます。</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="quantity" class="required">検収数量</label>
+              <div class="input-group">
+                <input class="input" id="quantity" inputmode="numeric" placeholder="例：5" disabled>
+                <span class="input-suffix" id="unit-label">-</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="receipt-date" class="required">検収日</label>
+              <input class="input" id="receipt-date" type="date" disabled>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:16px">
+            <label for="note">備考</label>
+            <input class="input" id="note" maxlength="200" placeholder="例：納品書No.、ロット番号など" disabled>
+          </div>
+
+          <div class="stock-preview" id="stock-preview" hidden></div>
+
+          <div id="form-error"></div>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-btn" disabled>検収登録</button>
+        </form>
+
+        <!-- 登録結果 -->
+        <section class="card" id="result-card" aria-live="polite">
+          <h2 class="card-title">登録結果</h2>
+          <div id="result-body">
+            <div class="result-empty">登録すると、在庫の変化とデータベースでの処理内容がここに表示されます。</div>
+          </div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="page-header" style="margin-bottom:12px">
+          <h2 class="card-title" style="margin:0">最近の検収記録</h2>
+          <a href="history.html?type=IN">すべての入庫履歴を見る →</a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>登録日時</th>
+                <th>検収日</th>
+                <th>型番</th>
+                <th>製品名</th>
+                <th class="num">数量</th>
+                <th class="num">在庫（前 → 後）</th>
+                <th>登録者</th>
+                <th>状態</th>
+              </tr>
+            </thead>
+            <tbody id="recent-rows"><tr><td colspan="9" class="empty">読み込み中…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/pages/receipt.js"></script>
+</body>
+</html>

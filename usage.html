@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>使用登録｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>使用登録</h1>
+          <p>資材を選んで使用数量を登録すると、在庫が自動で減ります。在庫を超える数量は登録できません。</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <form class="card" id="usage-form" novalidate autocomplete="off">
+          <h2 class="card-title">使用内容の入力</h2>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-category">カテゴリーで絞り込み</label>
+              <select class="select" id="f-category"><option value="">すべて</option></select>
+            </div>
+            <div class="field">
+              <label for="product-select" class="required">資材</label>
+              <select class="select" id="product-select"><option value="">選択してください</option></select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="model-no">または型番で選択</label>
+            <input class="input" id="model-no" placeholder="例：DC-001（Enterで選択）" maxlength="50">
+          </div>
+
+          <div class="info-panel" id="product-info" aria-live="polite">
+            <span class="placeholder-text">資材を選択すると、規格と現在庫が表示されます。</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="quantity" class="required">使用数量</label>
+              <div class="input-group">
+                <input class="input" id="quantity" inputmode="numeric" placeholder="例：2" disabled>
+                <span class="input-suffix" id="unit-label">-</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="usage-date" class="required">使用日</label>
+              <input class="input" id="usage-date" type="date" disabled>
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px">
+            <label for="note">備考</label>
+            <input class="input" id="note" maxlength="200" placeholder="例：第2診療室" disabled>
+          </div>
+
+          <div class="stock-preview" id="stock-preview" hidden></div>
+          <div id="form-error"></div>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-btn" disabled>使用登録</button>
+        </form>
+
+        <section class="card" aria-live="polite">
+          <h2 class="card-title">登録結果</h2>
+          <div id="result-body">
+            <div class="result-empty">登録すると、在庫の変化がここに表示されます。</div>
+          </div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="page-header" style="margin-bottom:12px">
+          <h2 class="card-title" style="margin:0" id="history-title">使用履歴</h2>
+          <a href="history.html?type=OUT" id="history-link">すべての出庫履歴を見る →</a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>使用日</th>
+                <th>登録日時</th>
+                <th>型番</th>
+                <th>製品名</th>
+                <th class="num">使用数量</th>
+                <th class="num">在庫（前 → 後）</th>
+                <th>登録者</th>
+                <th>備考</th>
+                <th>状態</th>
+              </tr>
+            </thead>
+            <tbody id="history-rows"><tr><td colspan="10" class="empty">読み込み中…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/pages/usage.js"></script>
+</body>
+</html>

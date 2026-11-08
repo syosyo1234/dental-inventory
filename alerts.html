@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>発注アラート｜歯科資材 検収・在庫管理</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6feb'/%3E%3Cpath d='M9 12l7-4 7 4-7 4-7-4zm0 0v8l7 4 7-4v-8' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+  <div class="shell">
+    <aside class="sidebar"></aside>
+    <header class="topbar"></header>
+    <main class="main">
+      <div class="page-header">
+        <div>
+          <h1>発注アラート</h1>
+          <p>在庫残存日数と発注リードタイムから、発注が必要な資材を表示します。発注したら「発注済みにする」を押してください（検収登録すると自動で解除されます）。</p>
+        </div>
+        <div class="field">
+          <label>平均使用量の集計期間</label>
+          <div class="segmented" id="period-toggle" role="group" aria-label="集計期間">
+            <button type="button" data-period="7" aria-pressed="true">直近7日</button>
+            <button type="button" data-period="30" aria-pressed="false">直近30日</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-error"></div>
+
+      <div class="toolbar">
+        <label class="check"><input type="checkbox" id="hide-ordered"> 発注済みの資材を表示しない</label>
+      </div>
+
+      <section class="card alert-section">
+        <div class="alert-section-head">
+          <span class="badge badge-urgent">緊急：在庫不足</span>
+          <h2 id="urgent-title">至急発注が必要な資材</h2>
+        </div>
+        <p class="alert-section-desc">在庫が0、または残存日数がリードタイム以下です。今発注しても到着前に欠品する恐れがあります。</p>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>型番</th><th>製品名</th><th class="num">現在庫</th><th class="num">平均使用量</th>
+                <th class="num">残存日数</th><th class="num">リードタイム</th><th>判定理由</th><th>発注状況</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="urgent-rows"><tr><td colspan="9" class="empty">読み込み中…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card alert-section">
+        <div class="alert-section-head">
+          <span class="badge badge-warning">注意：発注推奨</span>
+          <h2 id="warning-title">発注をおすすめする資材</h2>
+        </div>
+        <p class="alert-section-desc">残存日数が「リードタイム＋安全在庫日数」以下、または現在庫が発注点以下です。</p>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>型番</th><th>製品名</th><th class="num">現在庫</th><th class="num">平均使用量</th>
+                <th class="num">残存日数</th><th class="num">リードタイム</th><th>判定理由</th><th>発注状況</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="warning-rows"><tr><td colspan="9" class="empty">読み込み中…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="text-sub" style="margin-top:16px">※ 本システムは発注の判断を支援するものです。業者への発注は自動では行いません。判定ルールの詳細は<a href="inventory.html">在庫一覧</a>の「計算方法について」をご覧ください。</p>
+    </main>
+  </div>
+
+  <script type="module" src="js/pages/alerts.js"></script>
+</body>
+</html>
