@@ -6,6 +6,12 @@ Excel（VLOOKUP・手計算）で行っていた業務を、**入力の手間と
 - デモ：https://syosyo1234.github.io/dental-inventory/login.html （デモ用アカウントはログイン画面に表示）
 - ※ データはすべて架空のものです。患者情報は一切扱いません。
 
+| ダッシュボード | 検収登録（型番入力 → 自動表示 → 在庫自動更新） |
+|---|---|
+| ![ダッシュボード](docs/images/dashboard.png) | ![検収登録](docs/images/receipt.png) |
+| **発注アラート（判定理由・推奨発注数）** | **在庫一覧（平均使用量・残存日数）** |
+| ![発注アラート](docs/images/alerts.png) | ![在庫一覧](docs/images/inventory.png) |
+
 ---
 
 ## 1. 業務課題と解決策

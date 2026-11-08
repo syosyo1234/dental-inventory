@@ -177,8 +177,11 @@ export const STATUS_LABELS = {
   warning: { text: '注意', sub: '発注推奨', cls: 'badge-warning' },
   urgent:  { text: '緊急', sub: '在庫不足', cls: 'badge-urgent' },
 };
-export function statusBadge(status) {
+export function statusBadge(status, { compact = false } = {}) {
   const s = STATUS_LABELS[status];
   if (!s) return '<span class="badge badge-none">-</span>';
-  return `<span class="badge ${s.cls}">${s.text}：${s.sub}</span>`;
+  // compact：幅の狭い表（ダッシュボード）用に「緊急」「注意」だけ表示
+  return compact
+    ? `<span class="badge ${s.cls}" title="${s.text}：${s.sub}">${s.text}</span>`
+    : `<span class="badge ${s.cls}">${s.text}：${s.sub}</span>`;
 }

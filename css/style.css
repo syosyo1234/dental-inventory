@@ -558,6 +558,9 @@ details.explain th, details.explain td { border: 1px solid var(--color-border); 
 .reason { font-size: 12px; color: var(--color-text-sub); white-space: normal; min-width: 220px; }
 .reason strong { color: var(--color-text); }
 
+/* Dashboard：2つの表を縦に並べ、それぞれ全幅で表示（横スクロールを防ぐ） */
+.dashboard-panels > .card + .card { margin-top: 16px; }
+
 /* 卡片链接（Dashboard KPI） */
 a.card { color: inherit; }
 a.card:hover { text-decoration: none; border-color: #b9d0fb; }

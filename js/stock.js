@@ -58,8 +58,14 @@ export function remainingHtml(r) {
 }
 
 /** 発注状況の表示 */
-export function orderStatusHtml(r) {
-  if (r.ordered_at) return `<span class="badge badge-info">発注済（${formatDate(r.ordered_at).slice(5)}）</span>`;
+export function orderStatusHtml(r, { compact = false } = {}) {
+  if (r.ordered_at) {
+    const date = formatDate(r.ordered_at).slice(5);
+    // compact：幅の狭い表（ダッシュボード）用。日付はマウスを重ねると表示
+    return compact
+      ? `<span class="badge badge-info" title="発注日：${date}">発注済</span>`
+      : `<span class="badge badge-info">発注済（${date}）</span>`;
+  }
   if (r.status === 'normal') return '<span class="muted">-</span>';
   return '<span class="text-minus" style="font-weight:600">未発注</span>';
 }

@@ -43,13 +43,13 @@ async function loadStatus() {
     : '';
   alertRows.innerHTML = needs.slice(0, LIMIT).map((r) => `
     <tr class="st-${r.status}">
-      <td>${statusBadge(r.status)}</td>
+      <td>${statusBadge(r.status, { compact: true })}</td>
       <td><strong>${escapeHtml(r.model_no)}</strong></td>
       <td>${escapeHtml(r.name)}</td>
       <td class="num">${formatQty(r.current_qty)} ${escapeHtml(r.unit)}</td>
       <td class="num days-cell">${remainingHtml(r)}</td>
       <td class="num">${r.lead_time_days}日</td>
-      <td>${orderStatusHtml(r)}</td>
+      <td>${orderStatusHtml(r, { compact: true })}</td>
     </tr>`).join('') + more;
 }
 
@@ -78,7 +78,7 @@ async function loadReceipts() {
       <tr>
         <td>${formatDate(t.txn_date)}</td>
         <td>${escapeHtml(p.model_no)}</td>
-        <td>${escapeHtml(p.name)}</td>
+        <td style="white-space:normal;min-width:120px">${escapeHtml(p.name)}</td>
         <td class="num"><span class="text-plus">+${formatQty(t.quantity)}</span> ${escapeHtml(p.unit)}</td>
         <td>${escapeHtml(one(t.staff_profiles)?.display_name ?? '')}</td>
       </tr>`;
