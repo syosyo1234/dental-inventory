@@ -552,7 +552,7 @@ details.explain th, details.explain td { border: 1px solid var(--color-border); 
 
 /* 发注提醒 */
 .alert-section + .alert-section { margin-top: 16px; }
-.alert-section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.alert-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 4px; }
 .alert-section-head h2 { font-size: 15px; }
 .alert-section-desc { font-size: 13px; color: var(--color-text-sub); margin: 0 0 12px; }
 .reason { font-size: 12px; color: var(--color-text-sub); white-space: normal; min-width: 220px; }

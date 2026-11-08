@@ -8,7 +8,7 @@ import { initPage } from '../layout.js';
 import { supabase } from '../supabaseClient.js';
 import { escapeHtml, formatQty, errorMessage, showAlert, toast, setBusy } from '../ui.js';
 import {
-  fetchInventoryStatus, sortByUrgency, usageHtml, remainingHtml, orderStatusHtml, alertReason, PERIODS,
+  fetchInventoryStatus, sortByUrgency, usageHtml, remainingHtml, orderStatusHtml, alertReason, suggestedOrderHtml, PERIODS,
 } from '../stock.js';
 
 await initPage('alerts');
@@ -53,6 +53,7 @@ function rowHtml(r) {
       <td class="num">${usageHtml(r)}</td>
       <td class="num days-cell">${remainingHtml(r)}</td>
       <td class="num">${r.lead_time_days}日</td>
+      <td class="num">${suggestedOrderHtml(r)}</td>
       <td class="reason">${alertReason(r)}</td>
       <td>${orderStatusHtml(r)}</td>
       <td>
@@ -68,7 +69,7 @@ function renderSection(tbody, titleEl, label, list, emptyText) {
   const shown = els.hideOrdered.checked ? list.filter((r) => !r.ordered_at) : list;
   tbody.innerHTML = shown.length
     ? shown.map(rowHtml).join('')
-    : `<tr><td colspan="9" class="empty">${emptyText}</td></tr>`;
+    : `<tr><td colspan="10" class="empty">${emptyText}</td></tr>`;
 }
 
 function render() {

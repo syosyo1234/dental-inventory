@@ -65,6 +65,34 @@ export function orderStatusHtml(r) {
 }
 
 /**
+ * 推奨発注数
+ *   ＝ 1日平均使用量 ×（リードタイム ＋ 安全在庫日数 ＋ 補充周期）− 現在庫（切り上げ）
+ *   「今発注すると、到着後さらに 補充周期 日分もつ量」まで補充する考え方。
+ *   ・正常な資材は発注不要なので null
+ *   ・平均使用量がない（データ不足）場合は計算できないので null
+ * 計算に使う値（平均使用量・在庫）はデータベース関数の結果をそのまま使う。
+ */
+export const ORDER_CYCLE_DAYS = 14;   // 補充周期（1回の発注で何日分を確保するか）
+
+export function suggestedOrderQty(r) {
+  if (r.status === 'normal' || !(r.daily_usage > 0)) return null;
+  const target = r.daily_usage * (r.lead_time_days + r.safety_days + ORDER_CYCLE_DAYS);
+  return Math.max(0, Math.ceil(target - r.current_qty));
+}
+
+/** 推奨発注数の表示 */
+export function suggestedOrderHtml(r) {
+  if (r.status === 'normal') return '<span class="muted">-</span>';
+  const qty = suggestedOrderQty(r);
+  if (qty === null) {
+    return '<span class="muted" title="平均使用量がないため計算できません。直近30日に切り替えると計算できる場合があります。">-（手動で判断）</span>';
+  }
+  const days = r.lead_time_days + r.safety_days + ORDER_CYCLE_DAYS;
+  return `<strong>${formatQty(qty)}</strong> ${escapeHtml(r.unit)}
+    <span class="text-sub" style="display:block">${formatQty(r.daily_usage)}×${days}日−${formatQty(r.current_qty)}</span>`;
+}
+
+/**
  * アラートの理由（データベースの判定ルールを、人が読める文章にしたもの）
  *   urgent  : Q = 0、または D ≤ L
  *   warning : D ≤ L + S、または Q ≤ R

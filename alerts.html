@@ -43,10 +43,10 @@
             <thead>
               <tr>
                 <th>型番</th><th>製品名</th><th class="num">現在庫</th><th class="num">平均使用量</th>
-                <th class="num">残存日数</th><th class="num">リードタイム</th><th>判定理由</th><th>発注状況</th><th>操作</th>
+                <th class="num">残存日数</th><th class="num">リードタイム</th><th class="num">推奨発注数</th><th>判定理由</th><th>発注状況</th><th>操作</th>
               </tr>
             </thead>
-            <tbody id="urgent-rows"><tr><td colspan="9" class="empty">読み込み中…</td></tr></tbody>
+            <tbody id="urgent-rows"><tr><td colspan="10" class="empty">読み込み中…</td></tr></tbody>
           </table>
         </div>
       </section>
@@ -62,15 +62,15 @@
             <thead>
               <tr>
                 <th>型番</th><th>製品名</th><th class="num">現在庫</th><th class="num">平均使用量</th>
-                <th class="num">残存日数</th><th class="num">リードタイム</th><th>判定理由</th><th>発注状況</th><th>操作</th>
+                <th class="num">残存日数</th><th class="num">リードタイム</th><th class="num">推奨発注数</th><th>判定理由</th><th>発注状況</th><th>操作</th>
               </tr>
             </thead>
-            <tbody id="warning-rows"><tr><td colspan="9" class="empty">読み込み中…</td></tr></tbody>
+            <tbody id="warning-rows"><tr><td colspan="10" class="empty">読み込み中…</td></tr></tbody>
           </table>
         </div>
       </section>
 
-      <p class="text-sub" style="margin-top:16px">※ 本システムは発注の判断を支援するものです。業者への発注は自動では行いません。判定ルールの詳細は<a href="inventory.html">在庫一覧</a>の「計算方法について」をご覧ください。</p>
+      <p class="text-sub" style="margin-top:16px">※ 推奨発注数 ＝ 1日平均使用量 ×（リードタイム＋安全在庫日数＋14日）− 現在庫。発注が到着してからさらに約2週間分もつ量の目安です。<br>※ 本システムは発注の判断を支援するものです。業者への発注は自動では行いません。判定ルールの詳細は<a href="inventory.html">在庫一覧</a>の「計算方法について」をご覧ください。</p>
     </main>
   </div>
 

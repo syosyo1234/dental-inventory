@@ -8,7 +8,7 @@ import { initPage } from '../layout.js';
 import { fetchCategories } from '../data.js';
 import { escapeHtml, formatQty, errorMessage, showAlert, statusBadge, normalizeModelNo } from '../ui.js';
 import {
-  fetchInventoryStatus, sortByUrgency, daysForSort, usageHtml, remainingHtml, orderStatusHtml, PERIODS,
+  fetchInventoryStatus, sortByUrgency, daysForSort, usageHtml, remainingHtml, orderStatusHtml, suggestedOrderHtml, PERIODS,
 } from '../stock.js';
 
 await initPage('inventory');
@@ -38,12 +38,12 @@ async function load() {
   els.periodToggle.querySelectorAll('button').forEach((b) =>
     b.setAttribute('aria-pressed', String(Number(b.dataset.period) === period)));
   els.thPeriod.textContent = `直近${period}日の使用量`;
-  els.rows.innerHTML = '<tr><td colspan="12" class="empty">計算中…</td></tr>';
+  els.rows.innerHTML = '<tr><td colspan="13" class="empty">計算中…</td></tr>';
 
   const { data, error } = await fetchInventoryStatus(period);
   if (error) {
     showAlert(els.pageError, errorMessage(error));
-    els.rows.innerHTML = '<tr><td colspan="12" class="empty">データを読み込めませんでした。</td></tr>';
+    els.rows.innerHTML = '<tr><td colspan="13" class="empty">データを読み込めませんでした。</td></tr>';
     return;
   }
   showAlert(els.pageError, '');
@@ -91,7 +91,7 @@ function render() {
 
   els.count.textContent = `${list.length} 件（全 ${rows.length} 件）`;
   if (!list.length) {
-    els.rows.innerHTML = '<tr><td colspan="12" class="empty">該当する資材がありません。</td></tr>';
+    els.rows.innerHTML = '<tr><td colspan="13" class="empty">該当する資材がありません。</td></tr>';
     return;
   }
 
@@ -108,6 +108,7 @@ function render() {
       <td class="num">${formatQty(r.reorder_point)}</td>
       <td>${statusBadge(r.status)}</td>
       <td>${orderStatusHtml(r)}</td>
+      <td class="num">${suggestedOrderHtml(r)}</td>
       <td>
         <a class="btn btn-sm" href="usage.html?product=${r.product_id}">使用登録</a>
         <a class="btn btn-sm" href="history.html?product=${r.product_id}">履歴</a>

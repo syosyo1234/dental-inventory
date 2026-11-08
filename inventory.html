@@ -76,10 +76,11 @@
                 <th class="num">発注点</th>
                 <th>状態</th>
                 <th>発注状況</th>
+                <th class="num">推奨発注数</th>
                 <th>操作</th>
               </tr>
             </thead>
-            <tbody id="rows"><tr><td colspan="12" class="empty">読み込み中…</td></tr></tbody>
+            <tbody id="rows"><tr><td colspan="13" class="empty">読み込み中…</td></tr></tbody>
           </table>
         </div>
 
@@ -98,6 +99,8 @@
               <tr><td><span class="badge badge-warning">注意：発注推奨</span></td><td><code>D ≤ L + S</code> または <code>Q ≤ R</code></td><td>今発注すれば余裕をもって到着</td></tr>
               <tr><td><span class="badge badge-normal">正常：在庫十分</span></td><td>上記以外</td><td>-</td></tr>
             </table>
+            <p><strong>推奨発注数</strong>（緊急・注意の資材のみ）＝ 1日平均使用量 ×（リードタイム ＋ 安全在庫日数 ＋ 14日）− 現在庫（切り上げ）<br>
+              ・「今発注すると、到着後さらに約2週間（補充周期）もつ量」を目安として表示します。平均使用量がない場合は「手動で判断」と表示します。</p>
             <p>※ 計算はすべてデータベース関数 <code>get_inventory_status</code> で行い、在庫一覧・発注アラート・ダッシュボードで同じ結果を表示します。</p>
           </div>
         </details>
